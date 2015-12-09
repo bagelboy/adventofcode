@@ -1,15 +1,15 @@
 from hashlib import md5
 
 def find_number(key, pattern):
-	found = False
-	key_bytes = key.encode()
-	number = 1
-	while True:
-		hasher = md5(key_bytes)
-		hasher.update(str(number).encode())
-		if hasher.hexdigest().startswith(pattern):
-			return number
-		number += 1
+    found = False
+    key_bytes = key.encode()
+    number = 1
+    while True:
+        hasher = md5(key_bytes)
+        hasher.update(str(number).encode())
+        if hasher.hexdigest().startswith(pattern):
+            return number
+        number += 1
 
 # TODO: these tests take too long to run every time
 # assert(find_number('abcdef', '0' * 5) == 609043)

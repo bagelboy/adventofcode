@@ -3,14 +3,8 @@ import re
 start_value = '1113122113'
 
 def expand(value):
-    runs = []
-    for m in re.finditer(r'([\d])\1*', value):
-        runs.append(m.group(0))
-    processed = []
-    for run in runs:
-        processed.append('{}{}'.format(len(run), run[0]))
-
-    return ''.join(processed)
+    runs = map(lambda m: m.group(0), re.finditer(r'([\d])\1*', value))
+    return ''.join(map(lambda r: '{}{}'.format(len(r), r[0]), runs))
 
 value = start_value
 for i in range(40):

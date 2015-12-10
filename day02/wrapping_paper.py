@@ -12,9 +12,9 @@ def paper_needed(dimension):
     return surface_area + min(side_areas)
 
 def ribbon_needed(dimension):
-    side_perimeters = ((2 * (dimension.length + dimension.width)),
-                       (2 * (dimension.width + dimension.height)),
-                       (2 * (dimension.height + dimension.length)))
+    perimeters = ((2 * (dimension.length + dimension.width)),
+                  (2 * (dimension.width + dimension.height)),
+                  (2 * (dimension.height + dimension.length)))
     volume = dimension.length * dimension.width * dimension.height
     return min(perimeters) + volume
 

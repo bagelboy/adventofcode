@@ -7,8 +7,8 @@ def expand(value):
     for m in re.finditer(r'([\d])\1*', value):
         runs.append(m.group(0))
     processed = []
-    for last, next in zip(runs, runs):
-        processed.append('{}{}'.format(len(last), last[0]))
+    for run in runs:
+        processed.append('{}{}'.format(len(run), run[0]))
 
     return ''.join(processed)
 

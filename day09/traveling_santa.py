@@ -15,11 +15,7 @@ with open('input') as input:
 shortest = sum(distances.values()) * 1000
 longest = 0
 for perm in itertools.permutations(locations):
-    traveled = 0
-    last = perm[0]
-    for i in range(1, len(perm)):
-        traveled += distances[(last, perm[i])]
-        last = perm[i]
+    traveled = sum(map(lambda pair: distances[pair], zip(perm, perm[1:])))
     shortest = min(shortest, traveled)
     longest = max(longest, traveled)
 print(shortest)

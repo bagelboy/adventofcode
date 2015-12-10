@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 from collections import namedtuple
 
 Dimension = namedtuple('Dimension', ['length', 'width', 'height'])

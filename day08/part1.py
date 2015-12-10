@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 import re
 
 tokens = r'(?P<CHAR>\\x[0-9a-f][0-9a-f])|(?P<QUOTE>\\\")|(?P<BS>\\\\)'

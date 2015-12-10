@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 def follow_directions(directions):
     floor = 0
     basement_position = 0

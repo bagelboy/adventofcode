@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 class Santa:
     def __init__(self, start, visited):
         self.visited = visited

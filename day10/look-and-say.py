@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 import re
 
 start_value = '1113122113'

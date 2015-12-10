@@ -1,3 +1,5 @@
+#!/usr/bin/env/python3
+
 from hashlib import md5
 
 def find_number(key, pattern):

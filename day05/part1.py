@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 def has_three_vowels(string):
     vowels_seen = 0
     vowels = set(['a', 'e', 'i', 'o', 'u'])

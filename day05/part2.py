@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 def has_repeated_pair(string):
     for i in range(len(string)):
         for j in range(len(string)-2, i+1, -1):

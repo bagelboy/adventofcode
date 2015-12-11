@@ -2,15 +2,17 @@
 
 import re
 
-sub = {'z': 'a', 's': 't', 'r': 's', 'k': 'l', 'p': 'q', 'o': 'p', 'l': 'm',
-       'f': 'g', 'g': 'h', 'y': 'z', 'd': 'e', 'e': 'f', 'n': 'o', 'i': 'j',
-       'h': 'i', 'j': 'k', 'q': 'r', 'm': 'n', 'w': 'x', 'b': 'c', 'a': 'b',
-       'x': 'y', 't': 'u', 'v': 'w', 'u': 'v', 'c': 'd'}
+sub = { 'a': 'b', 'b': 'c', 'c': 'd', 'd': 'e', 'e': 'f', 'f': 'g',
+        'g': 'h', 'h': 'i', 'i': 'j', 'j': 'k', 'k': 'l', 'l': 'm',
+        'm': 'n', 'n': 'o', 'o': 'p', 'p': 'q', 'q': 'r', 'r': 's',
+        's': 't', 't': 'u', 'u': 'v', 'v': 'w', 'w': 'x', 'x': 'y',
+        'y': 'z' }
 
 def has_straight(password):
     for i in range(len(password)-2):
-        if (ord(password[i]) == ord(password[i+1])-1 and
-            ord(password[i+1]) == ord(password[i+2])-1):
+        if (password[i] in sub and password[i+1] in sub
+                and sub[password[i]] == password[i+1]
+                and sub[password[i+1]] == password[i+2]):
             return True
     return False
 

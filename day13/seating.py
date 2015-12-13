@@ -28,20 +28,21 @@ def find_happiest_arrangement(relationships):
 
 def run_tests():
     with open('test_input') as raw_data:
-        assert(find_happiest_arrangement(parse_relationships(raw_data)) == 330)
+        relationships = parse_relationships(raw_data)
+    assert(find_happiest_arrangement(relationships) == 330)
 
 if __name__ == '__main__':
     run_tests()
     with open('input') as raw_data:
         relationships = parse_relationships(raw_data)
 
-        # part one
-        print(find_happiest_arrangement(relationships))
+    # part one
+    print(find_happiest_arrangement(relationships))
 
-        # part two
-        my_name = 'Mike'
-        my_relationships = relationships[my_name]
-        for name in relationships:
-            relationships[my_name][name] = 0
-            relationships[name][my_name] = 0
-        print(find_happiest_arrangement(relationships))
+    # part two
+    my_name = 'Mike'
+    my_relationships = relationships[my_name]
+    for name in relationships:
+        relationships[my_name][name] = 0
+        relationships[name][my_name] = 0
+    print(find_happiest_arrangement(relationships))

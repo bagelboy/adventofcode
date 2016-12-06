@@ -9,10 +9,10 @@ static SQUARE_KEYPAD: [[u32; 3]; 3] = [[1, 2, 3],
 
 #[cfg_attr(rustfmt, rustfmt_skip)]
 static DIAMOND_KEYPAD: [[char; 5]; 5] = [['0', '0', '1', '0', '0'],
-                                        ['0', '2', '3', '4', '0'],
-                                        ['5', '6', '7', '8', '9'],
-                                        ['0', 'A', 'B', 'C', '0'],
-                                        ['0', '0', 'D', '0', '0']];
+                                         ['0', '2', '3', '4', '0'],
+                                         ['5', '6', '7', '8', '9'],
+                                         ['0', 'A', 'B', 'C', '0'],
+                                         ['0', '0', 'D', '0', '0']];
 
 fn read_input() -> Result<String, io::Error> {
     let mut input = String::new();

@@ -71,6 +71,7 @@ fn rotate_string(original: &str, shift_by: u32) -> String {
                 }
                 shifted as char
             }
+            '-' => ' ',
             _ => c,
         })
         .collect()
@@ -78,8 +79,8 @@ fn rotate_string(original: &str, shift_by: u32) -> String {
 
 #[test]
 fn rotate_string_test() {
-    assert_eq!(String::from("uryyb-jbeyq"),
-               rotate_string(&"hello-world", 13));
+    assert_eq!(String::from("very encrypted name"),
+               rotate_string(&"qzmt-zixmtkozy-ivhz", 343));
     assert_eq!(String::from("a"), rotate_string(&"z", 1));
 }
 

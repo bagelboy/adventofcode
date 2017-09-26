@@ -10,9 +10,10 @@ enum Sequence<'a> {
 fn parse_sequences(ip: &str) -> Vec<Sequence> {
     ip.split(|c| c == '[' || c == ']')
         .enumerate()
-        .map(|(i, slice)| match i % 2 == 0 {
-            true => Sequence::Supernet(slice),
-            _ => Sequence::Hypernet(slice),
+        .map(|(i, slice)| if i % 2 == 0 {
+            Sequence::Supernet(slice)
+        } else {
+            Sequence::Hypernet(slice)
         })
         .collect()
 }
@@ -81,7 +82,7 @@ fn test_has_bab() {
     assert!(has_bab(&(b'z', b'b'), "bzb"));
 }
 
-fn supports_tls(segments: &Vec<Sequence>) -> bool {
+fn supports_tls(segments: &[Sequence]) -> bool {
     let mut supported = false;
     for segment in segments {
         match *segment {
@@ -120,25 +121,21 @@ fn test_supports_tls() {
     ]));
 }
 
-fn supports_ssl(segments: &Vec<Sequence>) -> bool {
+fn supports_ssl(segments: &[Sequence]) -> bool {
     let mut aba_sequences: Vec<(u8, u8)> = Vec::new();
     for s in segments {
-        match s {
-            &Sequence::Supernet(s) => {
-                get_aba(s, &mut aba_sequences);
-            }
-            _ => {}
-        };
+        if let Sequence::Supernet(s) = *s {
+            get_aba(s, &mut aba_sequences);
+        }
     }
     for s in segments {
-        match s {
-            &Sequence::Hypernet(s) => for aba in &aba_sequences {
+        if let Sequence::Hypernet(s) = *s {
+            for aba in &aba_sequences {
                 if has_bab(aba, s) {
                     return true;
                 }
-            },
-            _ => {}
-        };
+            }
+        }
     }
     false
 }
@@ -169,9 +166,10 @@ fn test_supports_ssl() {
 
 fn main() {
     let mut input = String::new();
-    if let Ok(_) = File::open("input")
+    if File::open("input")
         .expect("cannot open input")
         .read_to_string(&mut input)
+        .is_ok()
     {
         let mut tls_supported = 0;
         let mut ssl_supported = 0;

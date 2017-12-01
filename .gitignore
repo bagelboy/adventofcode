@@ -1,1 +1,6 @@
+# Python
 *.py[cod]
+
+# Rust
+target/
+*.rs.bk

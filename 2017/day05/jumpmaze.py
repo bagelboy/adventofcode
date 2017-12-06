@@ -15,7 +15,8 @@ def escape_jump_maze(offsets):
 def escape_strange_jump_maze(offsets):
     steps = 0
     position = 0
-    while position in range(len(offsets)):
+    offset_len = len(offsets)
+    while position >= 0 and position < offset_len:
         steps += 1
         old_position = position
         position += offsets[old_position]

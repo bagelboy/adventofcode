@@ -1,6 +1,5 @@
 use std::fs::File;
-use std::io::BufRead;
-use std::io::BufReader;
+use std::io::Read;
 use std::iter::FromIterator;
 use std::str;
 
@@ -73,28 +72,42 @@ fn test_dance() {
     assert_eq!(vec!['b', 'a', 'e', 'd', 'c'], programs);
 }
 
+fn go_dancing(programs: &mut Vec<char>, dance_moves: &[&str], count: usize) -> String {
+    let mut seen: Vec<Vec<char>> = Vec::new();
+    for _ in 0..count {
+        if seen.contains(&programs) {
+            return String::from_iter(seen[count % seen.len()].iter());
+        }
+        seen.push(programs.clone());
+        for m in dance_moves {
+            dance(programs, m);
+        }
+    }
+
+    String::from_iter(programs.iter())
+}
+
+#[test]
+fn test_go_dancing() {
+    let mut programs = vec!['a', 'b', 'c', 'd', 'e'];
+    let dance_moves = vec!["s1", "x3/4", "pe/b"];
+    assert_eq!("baedc", go_dancing(&mut programs, &dance_moves, 1));
+    assert_eq!("ceadb", go_dancing(&mut programs, &dance_moves, 1));
+}
+
 fn main() {
     let mut programs = vec![
         'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p',
     ];
 
-    let file = File::open("input").expect("cannot open input");
-    let mut file = BufReader::new(file);
+    let mut input = String::new();
+    File::open("input")
+        .expect("cannot open input")
+        .read_to_string(&mut input)
+        .expect("cannot read input");
 
-    let mut buffer: Vec<u8> = Vec::new();
-    while file
-        .read_until(b',', &mut buffer)
-        .expect("error reading input")
-        > 0
-    {
-        {
-            let dance_move = str::from_utf8(&buffer)
-                .unwrap()
-                .trim_right_matches(|c| c == '\n' || c == ',');
-            dance(&mut programs, dance_move);
-        }
-        buffer.clear();
-    }
-    let output = String::from_iter(programs);
-    println!("{}", output);
+    let moves: Vec<&str> = input.trim_right().split(',').collect();
+
+    println!("  single dance: {}", go_dancing(&mut programs, &moves, 1));
+    println!("billion dances: {}", go_dancing(&mut programs, &moves, 1000000000 - 1));
 }

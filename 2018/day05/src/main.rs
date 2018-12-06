@@ -1,94 +1,66 @@
 use std::fs;
 
-fn reduce(polymer: &[u8]) -> String {
-    let mut input = polymer.clone().to_vec();
-    while input.len() > 1 {
-        let old_size = input.len();
-        for i in 0..input.len() - 1 {
-            let current = input[i];
-            let next = input[i + 1];
-            if (current.is_ascii_lowercase() && next == current.to_ascii_uppercase())
-                || (current.is_ascii_uppercase() && next == current.to_ascii_lowercase())
+fn react_polymer(buffer: &mut Vec<u8>) -> usize {
+    while buffer.len() > 1 {
+        let old_size = buffer.len();
+        for i in 0..buffer.len() - 1 {
+            let current = buffer[i];
+            let next = buffer[i + 1];
+            if (current.is_ascii_lowercase() && current.to_ascii_uppercase() == next)
+                || (current.is_ascii_uppercase() && current.to_ascii_lowercase() == next)
             {
-                input.remove(i);
-                input.remove(i);
+                buffer.drain(i..i + 2);
                 break;
             }
         }
-        if input.len() == old_size {
+        if buffer.len() == old_size {
             break;
         }
     }
-
-    String::from_utf8(input).expect("this should still be valid utf-8")
+    buffer.len()
 }
 
-fn full_reduce(polymer: &[u8]) -> String {
-    let mut input = polymer.clone().to_vec();
+#[test]
+fn test_react_polymer() {
+    assert_eq!(0, react_polymer(&mut "aA".as_bytes().to_vec()));
+    assert_eq!(0, react_polymer(&mut "abBA".as_bytes().to_vec()));
+    assert_eq!(4, react_polymer(&mut "abAB".as_bytes().to_vec()));
+    assert_eq!(6, react_polymer(&mut "aabAAB".as_bytes().to_vec()));
+    assert_eq!(
+        10,
+        react_polymer(&mut "dabAcCaCBAcCcaDA".as_bytes().to_vec())
+    );
+}
 
-    while let Some(location) = find_unit(&input) {
-        let first = input[location];
-        let second = input[location + 1];
-        let mut i = input.len() - 1;
-        while i != 0 {
-            if input[i] == second && input[i - 1] == first {
-                println!("removing {}", input[i] as char);
-                input.remove(i);
-                println!("removing {}", input[i] as char);
-                input.remove(i);
-                i -= 2;
+fn find_best_reduce(polymer: &[u8]) -> usize {
+    let mut shortest = polymer.len();
+    for unit in b'A'..=b'Z' {
+        let mut buffer = polymer.to_vec();
+        let mut i = 0;
+        while i < buffer.len() - 1 {
+            if buffer[i].to_ascii_uppercase() == unit {
+                buffer.drain(i..=i);
                 continue;
             }
-            i -= 1;
+            i += 1;
+        }
+        let length = react_polymer(&mut buffer);
+
+        if length < shortest {
+            shortest = length;
         }
     }
-
-    String::from_utf8(input).expect("this should work")
-}
-
-fn find_unit(polymer: &[u8]) -> Option<usize> {
-    let mut i = 0;
-    while i < polymer.len() - 1 {
-        let current = polymer[i];
-        let next = polymer[i + 1];
-        if current != next
-            && ((current.is_ascii_lowercase() && current.to_ascii_uppercase() == next)
-                || (current.is_ascii_uppercase() && current.to_ascii_lowercase() == next))
-        {
-            return Some(i);
-        }
-        i += 1;
-    }
-    None
+    shortest
 }
 
 #[test]
-fn test_find_unit() {
-    assert_eq!(Some(3), find_unit("xxxaA".as_bytes()));
-}
-
-#[test]
-fn test_reduce() {
-    assert_eq!("", reduce("aA".as_bytes()));
-    assert_eq!("", reduce("abBA".as_bytes()));
-    assert_eq!("abAB", reduce("abAB".as_bytes()));
-    assert_eq!("aabAAB", reduce("aabAAB".as_bytes()));
-    assert_eq!("dabCBAcaDA", reduce("dabAcCaCBAcCcaDA".as_bytes()));
-}
-
-#[test]
-fn test_full_reduce() {
-    assert_eq!("abCBAc", full_reduce("dabAcCaCBAcCcaDA".as_bytes()));
+fn test_find_best_reduce() {
+    assert_eq!(4, find_best_reduce("dabAcCaCBAcCcaDA".as_bytes()));
 }
 
 fn main() {
     let mut input = fs::read("input").expect("cannot read input");
-    println!("{:?}", input[input.len() - 1]);
-    // trim newline
-    input.pop();
-    println!("{:?}", input[input.len() - 1]);
-    //println!("{}, {}", input[input.len() - 2] as char, input[input.len() - 1] as char);
-
-    println!("{}", reduce(&input).len());
-    println!("{}", full_reduce(&input).len());
+    input.pop(); // remove newline
+    println!("part one: {}", react_polymer(&mut input.clone()));
+    println!("part two: {}", find_best_reduce(&input));
 }
